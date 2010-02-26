@@ -112,7 +112,7 @@ class Swift_PostmarkTransport implements Swift_Transport {
 		$message_data['ReplyTo'] = $message->getReplyTo();
 		$message_data['TextBody'] = $message->getBody();
 		
-		if (!is_null($html_part = $this->getMIMEPart($message)))
+		if (!is_null($html_part = $this->getMIMEPart($message, 'text/html')))
 			$message_data['HtmlBody'] = $html_part->getBody();
 			
 		$extra_headers = array();
