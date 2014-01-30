@@ -40,7 +40,7 @@ class Swift_PostmarkTransport implements Swift_Transport {
 	protected $IGNORED_HEADERS = array('Content-Type', 'Date');
 	
 	/** @var array */
-	protected $UNSUPPORTED_HEADERS = array('Bcc', 'Cc');
+	protected $UNSUPPORTED_HEADERS = array();
 	
 	/**
 	 * @param string $postmark_api_token Postmark API key
@@ -102,7 +102,7 @@ class Swift_PostmarkTransport implements Swift_Transport {
 		$headers = $this->processHeaders($message->getHeaders());
 		
 		$message_data = array();
-		
+
 		$message_data['Subject'] = $headers->get('Subject')->getFieldBody();
 		$headers->remove('Subject');
 		
@@ -125,8 +125,24 @@ class Swift_PostmarkTransport implements Swift_Transport {
 		
 		if (!empty($extra_headers))
 			$message_data['Headers'] = $extra_headers;
+
+		$children = $message->getChildren();
+
+		$attachments = array();
+		foreach ($children as $child) {
+			if (get_class($child) == 'Swift_Attachment'){
+				$attachments[] = array (
+
+					'Name' => $child->getFilename(),
+					'Content' => base64_encode($child->getBody()),
+					'ContentType' => $child->getContentType()
+				);
+			}
+		}
+		$message_data['Attachments'] = $attachments;
 			
 		return $message_data;
+		
 	}
 	
 	/**
