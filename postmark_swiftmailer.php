@@ -40,7 +40,7 @@ class Swift_PostmarkTransport implements Swift_Transport {
 	protected $IGNORED_HEADERS = array('Content-Type', 'Date');
 	
 	/** @var array */
-	protected $UNSUPPORTED_HEADERS = array('Bcc', 'Cc');
+	protected $UNSUPPORTED_HEADERS = array();
 	
 	/**
 	 * @param string $postmark_api_token Postmark API key
